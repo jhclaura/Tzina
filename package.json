@@ -1,0 +1,19 @@
+{
+  "name": "tzina_lupo_test",
+  "version": "1.0.0",
+  "description": "A Scene for look development of back character animations (taken off of Lupu's take)",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server",
+    "watch-js": "watchify js/app.js -o dist/bundle.js -v",
+    "build-js": "browserify js/app.js  | uglifyjs -mc warnings=false > dist/bundle.min.js"
+  },
+  "author": "Or Fleisher",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^13.0.1",
+    "three": "^0.78.0",
+    "uglify-js": "^2.6.4",
+    "watchify": "^3.7.0"
+  }
+}
