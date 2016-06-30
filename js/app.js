@@ -86,12 +86,26 @@ var init = function () {
 					clickCount++;
 					console.log(lightSource[clickCount].toChase);
 				}
+			},
+			this.drop = function() {
+				for(var i=0; i<particleGroup.emitters.length; i++){
+					particleGroup.emitters[i].duration=1;
+					particleGroup.emitters[i].enable();
+				}
+			},
+			this.dropLonger = function() {
+				for(var i=0; i<particleGroup.emitters.length; i++){
+					particleGroup.emitters[i].duration=10;
+					particleGroup.emitters[i].enable();
+				}
 			}
 		}
 		var aniText = new lightBehavior();
 		gui.add(aniText, 'chase');
 		gui.add(aniText, 'away');
 		gui.add(aniText, 'awayOneByOne');
+		gui.add(aniText, 'drop');
+		gui.add(aniText, 'dropLonger');
 		SetupAnim();
 	// -------------------------- ANIM END ---------------------------------
 };
