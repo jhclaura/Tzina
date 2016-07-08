@@ -50,9 +50,9 @@ function SetupAnim() {
 	});
 
 	hannahHouseMat = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
-	loadModel('assets/models/hannahHouse.js', hannahHouseMat, videoPosition, 10, function(returnMesh){
-		hannahHouse = returnMesh;
-	});
+	// loadModel('assets/models/hannahHouse.js', hannahHouseMat, videoPosition, 10, function(returnMesh){
+	// 	hannahHouse = returnMesh;
+	// });
 
 	//
 	videoCh.position.copy( videoPosition );
@@ -63,8 +63,8 @@ function SetupAnim() {
 	// bulbGeo = new THREE.SphereGeometry(1, 32, 32);
     textGlow = p_tex_loader.load('assets/images/glow_edit.png');
 
+    /*
 	for(var i=0; i<bulbAmount; i++){
-
 		var ranX = videoCh.position.x + Math.floor( Math.random() * 200 - 100 ) * 2;
 		var ranY = videoCh.position.y + Math.floor( Math.random() * 100 );
 		var ranZ = videoCh.position.z + Math.floor( Math.random() * 200 - 100 ) * 2;
@@ -77,49 +77,50 @@ function SetupAnim() {
 		bulbChaseStrengthes.push(LighthaseStrength);
 		bulbAwayStrengthes.push(LightAwayStrength);
 	}
+	*/
 
 	//
 	manTex1 = p_tex_loader.load('assets/images/man1.png');
 	manTex2 = p_tex_loader.load('assets/images/man2.png');
 	manTex3 = p_tex_loader.load('assets/images/man3.png');
 
-	loadModelRig('assets/models/man1.js', manTex1, videoCh.position, 50, function(returnMesh){
-		manRig1 = returnMesh;
-		manBone1 = manRig1.skeleton.bones;
-		manBone1[1].rotation.y = -0.2;
-		new TWEEN.Tween(manBone1[1].rotation)
-					  .to({y: 0.2}, 1000)
-					  .repeat(Infinity)
-					  .yoyo(true)
-					  // .easing(TWEEN.Easing.Elastic.InOut)
-					  .start();
+	// loadModelRig('assets/models/man1.js', manTex1, videoCh.position, 50, function(returnMesh){
+	// 	manRig1 = returnMesh;
+	// 	manBone1 = manRig1.skeleton.bones;
+	// 	manBone1[1].rotation.y = -0.2;
+	// 	new TWEEN.Tween(manBone1[1].rotation)
+	// 				  .to({y: 0.2}, 1000)
+	// 				  .repeat(Infinity)
+	// 				  .yoyo(true)
+	// 				  // .easing(TWEEN.Easing.Elastic.InOut)
+	// 				  .start();
 
-		manRig2 = manRig1.clone();
-		manRig2.position.x += 80;
-		manRig2.material = manRig2.material.clone();
-		manRig2.material.map = manTex2;
-		scene.add(manRig2);
-		manBone2 = manRig2.skeleton.bones;
-		manBone2[1].rotation.y = -0.2;
-		new TWEEN.Tween(manBone2[1].rotation)
-					  .to({y: 0.2}, 1000)
-					  .repeat(Infinity)
-					  .yoyo(true)
-					  .start();
+	// 	manRig2 = manRig1.clone();
+	// 	manRig2.position.x += 80;
+	// 	manRig2.material = manRig2.material.clone();
+	// 	manRig2.material.map = manTex2;
+	// 	scene.add(manRig2);
+	// 	manBone2 = manRig2.skeleton.bones;
+	// 	manBone2[1].rotation.y = -0.2;
+	// 	new TWEEN.Tween(manBone2[1].rotation)
+	// 				  .to({y: 0.2}, 1000)
+	// 				  .repeat(Infinity)
+	// 				  .yoyo(true)
+	// 				  .start();
 
-		manRig3 = manRig1.clone();
-		manRig3.position.x -= 80;
-		manRig3.material = manRig3.material.clone();
-		manRig3.material.map = manTex3;
-		scene.add(manRig3);
-		manBone3 = manRig3.skeleton.bones;
-		manBone3[1].rotation.y = -0.2;
-		new TWEEN.Tween(manBone3[1].rotation)
-					  .to({y: 0.2}, 1000)
-					  .repeat(Infinity)
-					  .yoyo(true)
-					  .start();
-	});
+	// 	manRig3 = manRig1.clone();
+	// 	manRig3.position.x -= 80;
+	// 	manRig3.material = manRig3.material.clone();
+	// 	manRig3.material.map = manTex3;
+	// 	scene.add(manRig3);
+	// 	manBone3 = manRig3.skeleton.bones;
+	// 	manBone3[1].rotation.y = -0.2;
+	// 	new TWEEN.Tween(manBone3[1].rotation)
+	// 				  .to({y: 0.2}, 1000)
+	// 				  .repeat(Infinity)
+	// 				  .yoyo(true)
+	// 				  .start();
+	// });
 
 	loadModelDome('assets/models/shield.js', 'assets/models/dome.js', 'assets/models/collapse.js');
 
@@ -313,7 +314,7 @@ function SetupAnim() {
 	function loadModelDome (modelS, modelD, modelC) {
 
 		var loader = new THREE.JSONLoader();
-		var domeMat = new THREE.MeshBasicMaterial({morphTargets: true, color: 0xAA4488, wireframe: true});
+		var domeMat = new THREE.MeshBasicMaterial({morphTargets: true, color: 0xAA4488, wireframe: true, visible: false});
 		var followMat = new THREE.MeshBasicMaterial({color: 0xffff00});
 		var followMesh = new THREE.Mesh(new THREE.SphereGeometry(10), followMat);
 
@@ -390,6 +391,7 @@ function UpdateAnim() {
 	// 	bulbAwayStrength.lerpValue(5, 0.001);
 	// }
 
+	/*
 	for(var i=0; i<lightSource.length; i++){
 		// lightSource[i].seek(pointerControls);
 		// lightSource[i].arrive(pointerControls);
@@ -419,5 +421,5 @@ function UpdateAnim() {
 		lightSource[i].update();
 		// lightSource[i].borders(3000, 1000);
 	}
-
+	*/
 }

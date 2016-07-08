@@ -141,9 +141,9 @@ var init = function () {
 				}
 			};
 		}
-		gui.add(lightBehavior, 'chase');
-		gui.add(lightBehavior, 'away');
-		gui.add(lightBehavior, 'awayOneByOne');
+		// gui.add(lightBehavior, 'chase');
+		// gui.add(lightBehavior, 'away');
+		// gui.add(lightBehavior, 'awayOneByOne');
 		// gui.add(lightBehavior, 'drop');
 		// gui.add(lightBehavior, 'dropLonger');
 		gui.add(lightBehavior, 'domeInfluence', 0, 1).onChange(lightBehavior.domeUpdate);
@@ -152,6 +152,11 @@ var init = function () {
 		gui.add(lightBehavior, 'showLeaf');
 		gui.add(lightBehavior, 'showEvil');
 		SetupAnim();
+
+		var lookupTable=[];
+		for (var i=0; i<50; i++) {
+		  lookupTable.push(Math.random());
+		}
 
 		function UpdateVertices () {
 			var upp = new THREE.Vector3(0,-1,0);
@@ -171,6 +176,8 @@ var init = function () {
 				}
 
 				vA.add( shieldGeo.vertices[i] );
+				tempA.set( lookupTable[i%50]*100, lookupTable[(i+1)%50]*100, lookupTable[(i+2)%50]*100 );
+				vA.add( tempA );
 				// domeMorphTargets[i].position.copy( vA );
 				domeMorphTargets[i].mesh.position.copy( vA );
 				particleGroup.emitters[i].position.value = particleGroup.emitters[i].position.value.copy( vA );
