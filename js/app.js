@@ -14,9 +14,20 @@ var lupo_test_take = [
 	 }
  ];
 
+ var hanna_idle = [
+	{  "name" : "./assets/footage/hanna_idle",
+		 "mindepth" : 2138.454101562,
+		 "maxdepth" : 3047.334472656
+	 }
+ ];
+
 var ray, projector, mouse, controls;
 var videos, objects;
 var clickCount;
+
+var gui;
+//
+var videoPosition = new THREE.Vector3(0,400,-2000);
 
 var init = function () {
 
@@ -30,10 +41,12 @@ var init = function () {
 
 	controls = new THREE.OrbitControls(camera);
 
-		video = new RGBDVideo( lupo_test_take[0] );
+		// video = new RGBDVideo( lupo_test_take[0] );
+		video = new RGBDVideo( hanna_idle[0] );
 		video.rotation.set(0,135.09999999999997,0);
-		video.position.x = -260;
-		video.position.z = -1050;
+		// video.position.x = -260;
+		// video.position.z = -1050;
+		video.position.copy( videoPosition );
 		scene.add( video );
 
 
@@ -56,28 +69,30 @@ var init = function () {
   this.start = function() {video.play();},
 	this.stop = function() {video.pause();};
 	};
-	var gui = new dat.GUI();
+	gui = new dat.GUI();
 	var text = new tzina();
 	gui.add(text, 'start');
 	gui.add(text, 'stop');
 
 	// -------------------------- ANIM START -------------------------------
 		clickCount = 0;
-		var lightBehavior = function() {
+		var lightBehavior = new function() {
+			this.domeInfluence = 0.01;
+			this.domeInfluence2 = 0.01;
 			this.chase = function() {
 				lightToChase = true;
 				clickCount = 0;
 				for(var i=0; i<lightSource.length; i++){
 					lightSource[i].setToChase(true);
 				}
-			},
+			};
 			this.away = function() {
 				lightToChase = false;
 				clickCount = 0;
 				for(var i=0; i<lightSource.length; i++){
 					lightSource[i].setToChase(false);
 				}
-			},
+			};
 			this.awayOneByOne = function() {
 				lightToChase = false;
 
@@ -86,27 +101,85 @@ var init = function () {
 					clickCount++;
 					console.log(lightSource[clickCount].toChase);
 				}
-			},
+			};
 			this.drop = function() {
 				for(var i=0; i<particleGroup.emitters.length; i++){
 					particleGroup.emitters[i].duration=1;
 					particleGroup.emitters[i].enable();
 				}
-			},
+			};
 			this.dropLonger = function() {
 				for(var i=0; i<particleGroup.emitters.length; i++){
 					particleGroup.emitters[i].duration=10;
 					particleGroup.emitters[i].enable();
 				}
+			};
+			this.domeUpdate = function() {
+				dome.morphTargetInfluences[0] = lightBehavior.domeInfluence;
+				dome.morphTargetInfluences[1] = lightBehavior.domeInfluence2;
+				UpdateVertices();
+			};
+			this.showTwig = function() {
+				for(var i=0; i<domeMorphTargets.length; i++){
+					domeMorphTargets[i].mesh.children[0].material.visible=true;
+					domeMorphTargets[i].mesh.children[1].material.visible=false;
+					domeMorphTargets[i].mesh.children[2].material.visible=false;
+				}
+			};
+			this.showLeaf = function() {
+				for(var i=0; i<domeMorphTargets.length; i++){
+					domeMorphTargets[i].mesh.children[0].material.visible=false;
+					domeMorphTargets[i].mesh.children[1].material.visible=true;
+					domeMorphTargets[i].mesh.children[2].material.visible=false;
+				}
+			};
+			this.showEvil = function() {
+				for(var i=0; i<domeMorphTargets.length; i++){
+					domeMorphTargets[i].mesh.children[0].material.visible=false;
+					domeMorphTargets[i].mesh.children[1].material.visible=false;
+					domeMorphTargets[i].mesh.children[2].material.visible=true;
+				}
+			};
+		}
+		gui.add(lightBehavior, 'chase');
+		gui.add(lightBehavior, 'away');
+		gui.add(lightBehavior, 'awayOneByOne');
+		// gui.add(lightBehavior, 'drop');
+		// gui.add(lightBehavior, 'dropLonger');
+		gui.add(lightBehavior, 'domeInfluence', 0, 1).onChange(lightBehavior.domeUpdate);
+		gui.add(lightBehavior, 'domeInfluence2', 0, 1).onChange(lightBehavior.domeUpdate);
+		gui.add(lightBehavior, 'showTwig');
+		gui.add(lightBehavior, 'showLeaf');
+		gui.add(lightBehavior, 'showEvil');
+		SetupAnim();
+
+		function UpdateVertices () {
+			var upp = new THREE.Vector3(0,-1,0);
+			var morphTargets = dome.geometry.morphTargets;
+			var morphInfluences = dome.morphTargetInfluences;
+
+			// get morph geometry update position data
+			for(var i=0; i<shieldGeo.vertices.length; i++){
+				var centerV = new THREE.Vector3();
+				var vA = new THREE.Vector3();
+				var tempA = new THREE.Vector3();
+
+				for ( var t = 0, tl = morphTargets.length; t < tl; t ++ ) {
+					var influence = morphInfluences[ t ];
+					var target = morphTargets[t].vertices[i];
+					vA.addScaledVector( tempA.subVectors( target, shieldGeo.vertices[i] ), influence );
+				}
+
+				vA.add( shieldGeo.vertices[i] );
+				// domeMorphTargets[i].position.copy( vA );
+				domeMorphTargets[i].mesh.position.copy( vA );
+				particleGroup.emitters[i].position.value = particleGroup.emitters[i].position.value.copy( vA );
+				// rotate
+				var m1 = new THREE.Matrix4();
+				m1.lookAt( centerV, vA, upp );
+				domeMorphTargets[i].mesh.quaternion.setFromRotationMatrix( m1 );
 			}
 		}
-		var aniText = new lightBehavior();
-		gui.add(aniText, 'chase');
-		gui.add(aniText, 'away');
-		gui.add(aniText, 'awayOneByOne');
-		gui.add(aniText, 'drop');
-		gui.add(aniText, 'dropLonger');
-		SetupAnim();
 	// -------------------------- ANIM END ---------------------------------
 };
 
