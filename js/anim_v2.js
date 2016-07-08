@@ -36,6 +36,7 @@
 	var domeMorphTargets = [];
 	var twigGeo, leafGeo, evilGeo;
 	var displacement_t, color_t, uniforms_t, shaderMat_t, nv_t;
+	var perlin = new ImprovedNoise(), noiseQuality = 1;
 
 function SetupAnim() {
 
@@ -373,12 +374,22 @@ function SetupAnim() {
 }
 
 function UpdateAnim() {
-	var dt = clock.getDelta();
+	var dt = clock.getDelta ();
+	var et = clock.getElapsedTime ();
 
 	if(particleGroup)
 		particleGroup.tick( dt );
 
 	TWEEN.update();
+
+	//
+	for(var i=0; i<shieldGeo.vertices.length; i++){
+		// var h =  perlin.noise(et*0.001, i, 1) % (Math.PI/2);
+		var h = perlin.noise(et*0.1, i, 1);
+		domeMorphTargets[i].mesh.position.addScalar( h );
+		particleGroup.emitters[i].position.value = particleGroup.emitters[i].position.value.addScalar( h );
+	}
+
 
 	//
 	// if( lightToChase ) {
