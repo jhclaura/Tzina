@@ -37,6 +37,7 @@
 	var twigGeo, leafGeo, evilGeo;
 	var displacement_t, color_t, uniforms_t, shaderMat_t, nv_t;
 	var perlin = new ImprovedNoise(), noiseQuality = 1;
+	var hannahDomeBuilt = false;
 
 function SetupAnim() {
 
@@ -214,7 +215,8 @@ function SetupAnim() {
 			depthTest: false
 		});
 
-		for(var i=0; i<domeMorphTargets.length; i++){
+		// reduce emitter amount to be 1/5 of domeMorphTargets.length
+		for(var i=0; i<domeMorphTargets.length-6; i+=6){
 			emitter = new SPE.Emitter({
 				type: SPE.distributions.SPHERE,
 				// duration: 10,
@@ -254,7 +256,7 @@ function SetupAnim() {
 					value: [10,50,50,50,30]
 					// spread: [1,3]
 				},
-				particleCount: 50,
+				particleCount: 40,
 				drag: 0.5
 				// wiggle: 15
 				// isStatic: true
@@ -366,6 +368,8 @@ function SetupAnim() {
 					scene.add(dome);
 
 					InitParticles_v2();
+
+					hannahDomeBuilt = true;
 				});
 			});
 			
@@ -383,13 +387,18 @@ function UpdateAnim() {
 	TWEEN.update();
 
 	//
-	for(var i=0; i<shieldGeo.vertices.length; i++){
-		// var h =  perlin.noise(et*0.001, i, 1) % (Math.PI/2);
-		var h = perlin.noise(et*0.1, i, 1);
-		domeMorphTargets[i].mesh.position.addScalar( h );
-		particleGroup.emitters[i].position.value = particleGroup.emitters[i].position.value.addScalar( h );
-	}
+	if(hannahDomeBuilt){
+		for(var i=0; i<shieldGeo.vertices.length; i++){
+			// var h =  perlin.noise(et*0.001, i, 1) % (Math.PI/2);
+			var h = perlin.noise(et*0.1, i, 1);
+			domeMorphTargets[i].mesh.position.addScalar( h );
 
+			if( i%6==0 ){
+				if(i/6 != 63)
+					particleGroup.emitters[i/6].position.value = particleGroup.emitters[i/6].position.value.addScalar( h );
+			}
+		}
+	}
 
 	//
 	// if( lightToChase ) {

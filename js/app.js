@@ -178,9 +178,13 @@ var init = function () {
 				vA.add( shieldGeo.vertices[i] );
 				tempA.set( lookupTable[i%50]*100, lookupTable[(i+1)%50]*100, lookupTable[(i+2)%50]*100 );
 				vA.add( tempA );
-				// domeMorphTargets[i].position.copy( vA );
+
 				domeMorphTargets[i].mesh.position.copy( vA );
-				particleGroup.emitters[i].position.value = particleGroup.emitters[i].position.value.copy( vA );
+				if(i%6==0){
+					if(i/6 != 63)
+						particleGroup.emitters[i/6].position.value = particleGroup.emitters[i/6].position.value.copy( vA );
+				}
+
 				// rotate
 				var m1 = new THREE.Matrix4();
 				m1.lookAt( centerV, vA, upp );
