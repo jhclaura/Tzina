@@ -44,8 +44,6 @@ var init = function () {
 		// video = new RGBDVideo( lupo_test_take[0] );
 		video = new RGBDVideo( hanna_idle[0] );
 		video.rotation.set(0,135.09999999999997,0);
-		// video.position.x = -260;
-		// video.position.z = -1050;
 		video.position.copy( videoPosition );
 		scene.add( video );
 
@@ -54,10 +52,8 @@ var init = function () {
 	light.position.set( 1, 1, 1 );
 	scene.add( light );
 
-	var light = new THREE.DirectionalLight( 0xffffff, 0.75 );
+	light = new THREE.DirectionalLight( 0xffffff, 0.75 );
 	light.position.set( -1, - 0.5, -1 );
-	// scene.add( light );
-	// var light = new THREE.HemisphereLight(new THREE.Color(0xffffff), new THREE.Color(0xa5e3f9), 0.2);
 	scene.add( light );
 
 	renderer = new THREE.WebGLRenderer( { alpha: true } );
@@ -130,49 +126,25 @@ var init = function () {
 				UpdateVertices();
 			};
 			this.showTwig = function() {
-				// for(var i=0; i<domeMorphTargets.length; i++){
-				// 	domeMorphTargets[i].mesh.children[0].material.visible=true;
-				// 	domeMorphTargets[i].mesh.children[1].material.visible=false;
-				// 	domeMorphTargets[i].mesh.children[2].material.visible=false;
-				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
-				// twigMat.visible = true;
-				// leafMat.visible = false;
-				// evilMat.visible = false;
 			};
 			this.showLeaf = function() {
-				// for(var i=0; i<domeMorphTargets.length; i++){
-				// 	domeMorphTargets[i].mesh.children[0].material.visible=false;
-				// 	domeMorphTargets[i].mesh.children[1].material.visible=true;
-				// 	domeMorphTargets[i].mesh.children[2].material.visible=false;
-				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
-				// twigMat.visible = false;
-				// leafMat.visible = true;
-				// evilMat.visible = false;
 			};
 			this.showEvil = function() {
-				// for(var i=0; i<domeMorphTargets.length; i++){
-				// 	domeMorphTargets[i].mesh.children[0].material.visible=false;
-				// 	domeMorphTargets[i].mesh.children[1].material.visible=false;
-				// 	domeMorphTargets[i].mesh.children[2].material.visible=true;
-				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
-				// twigMat.visible = false;
-				// leafMat.visible = false;
-				// evilMat.visible = true;
 			};
 			this.toBrown = function() {
 				// 59.6, 35.3, 9
@@ -199,11 +171,6 @@ var init = function () {
 				new TWEEN.Tween( evilMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
 			};
 		}
-		// gui.add(lightBehavior, 'chase');
-		// gui.add(lightBehavior, 'away');
-		// gui.add(lightBehavior, 'awayOneByOne');
-		// gui.add(lightBehavior, 'drop');
-		// gui.add(lightBehavior, 'dropLonger');
 		gui.add(lightBehavior, 'domeInfluence', 0, 1).onChange(lightBehavior.domeUpdate);
 		gui.add(lightBehavior, 'domeInfluence2', 0, 1).onChange(lightBehavior.domeUpdate);
 		gui.add(lightBehavior, 'showTwig');
@@ -223,7 +190,6 @@ var init = function () {
 		}
 
 		function UpdateVertices () {
-			var upp = new THREE.Vector3(0,-1,0);
 			var morphTargets = dome.geometry.morphTargets;
 			var morphInfluences = dome.morphTargetInfluences;
 
@@ -263,7 +229,6 @@ var onWindowResize = function () {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-
 };
 
 var animate = function () {
@@ -276,5 +241,6 @@ var animate = function () {
 	renderer.render( scene, camera );
 
 };
-	init();
-	animate();
+
+init();
+animate();

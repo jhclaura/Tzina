@@ -59,22 +59,6 @@ function SetupAnim() {
 	
     textGlow = p_tex_loader.load('assets/images/glow_edit.png');
 
-    /*
-	for(var i=0; i<bulbAmount; i++){
-		var ranX = videoCh.position.x + Math.floor( Math.random() * 200 - 100 ) * 2;
-		var ranY = videoCh.position.y + Math.floor( Math.random() * 100 );
-		var ranZ = videoCh.position.z + Math.floor( Math.random() * 200 - 100 ) * 2;
-
-		L = new LightBulb(ranX,ranY,ranZ,textGlow);
-		lightSource.push(L);
-
-		LighthaseStrength = new LauraMath(0);
-		LightAwayStrength = new LauraMath(0.5);
-		bulbChaseStrengthes.push(LighthaseStrength);
-		bulbAwayStrengthes.push(LightAwayStrength);
-	}
-	*/
-
 	//
 	manTex1 = p_tex_loader.load('assets/images/man1.png');
 	manTex2 = p_tex_loader.load('assets/images/man2.png');
@@ -130,75 +114,6 @@ function SetupAnim() {
 	loader.load("assets/models/twig.js", function(geometry, material){
 		twigGeo = geometry;
 	});
-
-	function InitParticles() {
-
-		particleGroup = new SPE.Group({
-			texture: {
-				value: particleTex
-			},
-			depthTest: false
-		});
-
-		var curveLength = Object.keys(Curves).length;
-
-		for(var i=0; i<curveLength; i++){
-			// var cList = ""+i;
-			// console.log(cList);
-			var curvArray = Curves[i]();
-			// console.log(curvArray.length);
-
-			for(var j=0; j<curvArray.length; j++){
-				var pos = curvArray[j].multiplyScalar(10).add(videoPosition);
-				emitter = new SPE.Emitter({
-					type: SPE.distributions.SPHERE,
-					duration: 10,
-					maxAge: {
-						value: 10,
-						spread: 2
-					},
-					position: {
-						// value: new THREE.Vector3( videoPosition.x+(i-3)*200,  videoPosition.y+500,  videoPosition.z+(j-3)*200 ),
-						value: pos,
-						spread: new THREE.Vector3(20,20,20),
-						radiusScale: new THREE.Vector3(3,3,3),
-						distribution: SPE.distributions.SPHERE
-					},
-					acceleration: {
-						value: new THREE.Vector3(0,-5,0),
-						spread: new THREE.Vector3(2,-5,2)
-					},
-					velocity: {
-						value: new THREE.Vector3(1,-1,1)
-						// distribution: SPE.distributions.SPHERE
-					},
-					rotation: {
-						angle: 1
-					},
-					angle: {
-						value: [0,1,-1],
-						spread: [0,-1,1]
-					},
-					// color: {
-					// 	value: new THREE.Color( 0xAA4488 )
-					// },
-					opacity: {
-						value: [0,1,1,1,0]
-					},
-					size: {
-						value: [10,50,50,50,30]
-						// spread: [1,3]
-					},
-					particleCount: 50,
-					drag: 0.5
-					// wiggle: 15
-					// isStatic: true
-				});
-				particleGroup.addEmitter( emitter );
-			}
-			scene.add( particleGroup.mesh );
-		}
-	}
 
 	function InitParticles_v2() {
 
@@ -323,16 +238,8 @@ function SetupAnim() {
 
 			shieldGeo = geometry;
 			
-
-			// returnM.scale.multiplyScalar(modelScale);
-			// returnM.position.copy(modelPos);
-
 			loader.load(modelD, function(geometryD, materialD){
 				domeGeo = geometryD;
-				// shield = new THREE.Mesh(geometry, _modelMat);
-
-				// domeGeo.morphTargets[0] = {name: 't1', vertices: shieldGeo.vertices};
-				// domeGeo.computeMorphNormals();
 
 				loader.load(modelC, function(geometryC, materialC){
 					collapseGeo = geometryC;
@@ -351,7 +258,6 @@ function SetupAnim() {
 					shieldGeo.computeMorphNormals();
 
 					dome = new THREE.Mesh(shieldGeo, domeMat);
-					// dome.geometry.verticesNeedUpdate = true;
 
 					var centerV = new THREE.Vector3();
 
@@ -406,47 +312,5 @@ function UpdateAnim() {
 			}
 		}
 	}
-
-	//
-	// if( lightToChase ) {
-	// 	// console.log([i] + "bulb chases!");
-	// 	bulbChaseStrength.lerpValue(10, 0.1);
-	// 	bulbAwayStrength.lerpValue(0, 0.1);
-	// } else {
-	// 	// console.log([i] + "bulb away!");
-	// 	bulbChaseStrength.lerpValue(0, 0.01);
-	// 	bulbAwayStrength.lerpValue(5, 0.001);
-	// }
-
-	/*
-	for(var i=0; i<lightSource.length; i++){
-		// lightSource[i].seek(pointerControls);
-		// lightSource[i].arrive(pointerControls);
-
-		if( lightToChase ) {
-			// console.log([i] + "bulb chases!");
-			bulbChaseStrengthes[i].lerpValue(10, 0.1);
-			bulbAwayStrengthes[i].lerpValue(0, 0.1);
-		} else {
-			if(!lightSource[i].toChase){
-				bulbChaseStrengthes[i].lerpValue(0, 0.01);
-				bulbAwayStrengthes[i].lerpValue(5, 0.001);
-			}
-		}
-
-		lightSource[i].separate(lightSource);
-
-		lightSource[i].setArriveScalar(bulbChaseStrengthes[i].x);
-		lightSource[i].setSeparateSingleScalar(bulbAwayStrengthes[i].x);
-
-		lightSource[i].arrive( videoCh );
-		lightSource[i].separateSingle( videoCh, 300 );
-
-		// lightSource[i].align(lightSource);
-		// lightSource[i].cohesion(lightSource);
-		// lightSource[i].separateFromFloor(ground);
-		lightSource[i].update();
-		// lightSource[i].borders(3000, 1000);
-	}
-	*/
+	
 }
