@@ -34,10 +34,11 @@
 // DOME
 	var dome, domeGeo, shield, shieldGeo, collapseGeo;
 	var domeMorphTargets = [];
-	var twigGeo, leafGeo, evilGeo;
+	var twigGeo, leafGeo, evilGeo, twigMat, leafMat, evilMat;
 	var displacement_t, color_t, uniforms_t, shaderMat_t, nv_t;
 	var perlin = new ImprovedNoise(), noiseQuality = 1;
 	var hannahDomeBuilt = false;
+	var upp = new THREE.Vector3(0,-1,0);
 
 function SetupAnim() {
 
@@ -321,6 +322,10 @@ function SetupAnim() {
 		var followMat = new THREE.MeshBasicMaterial({color: 0xffff00});
 		var followMesh = new THREE.Mesh(new THREE.SphereGeometry(10), followMat);
 
+		leafMat = new THREE.MeshBasicMaterial( {color: 0x17985a, wireframe: true} );
+		twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
+		evilMat = new THREE.MeshLambertMaterial( {color: 0x5a1798} );
+
 		loader.load(modelS, function(geometry, material){
 
 			shieldGeo = geometry;
@@ -355,6 +360,8 @@ function SetupAnim() {
 					dome = new THREE.Mesh(shieldGeo, domeMat);
 					// dome.geometry.verticesNeedUpdate = true;
 
+					var centerV = new THREE.Vector3();
+
 					for(var i=0; i<dome.geometry.vertices.length; i++){
 						// v.1 - yellow ball
 						// var fMesh = followMesh.clone();
@@ -362,8 +369,15 @@ function SetupAnim() {
 						// scene.add(fMesh)
 
 						// v.2 - thing
-						var fMesh = new Thing( dome.geometry.vertices[i], twigGeo, leafGeo, evilGeo );
-						domeMorphTargets.push( fMesh );					
+						var fMesh = new Thing( dome.geometry.vertices[i],
+											   twigGeo, leafGeo, evilGeo,
+											   twigMat, leafMat, evilMat );
+
+						var m1 = new THREE.Matrix4();
+						m1.lookAt( centerV, dome.geometry.vertices[i], upp );
+						fMesh.mesh.quaternion.setFromRotationMatrix( m1 );
+
+						domeMorphTargets.push( fMesh );
 					}
 					scene.add(dome);
 

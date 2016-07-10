@@ -21,14 +21,22 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil ){
 	this.mesh = new THREE.Object3D();
 
 	//CREATE_FORMS
-	this.leafMat = new THREE.MeshBasicMaterial( {color: 0x17985a, wireframe: true} );
-	this.twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
-	this.evilMat = new THREE.MeshBasicMaterial( {color: 0x5a1798, wireframe: true} );
+	// this.leafMat = new THREE.MeshBasicMaterial( {color: 0x17985a, wireframe: true} );
+	// this.twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
+	// this.evilMat = new THREE.MeshBasicMaterial( {color: 0x5a1798, wireframe: true} );
 
-    this.twig = new THREE.Mesh(geoTwig, this.twigMat);
+	// v.1
+    // this.twig = new THREE.Mesh(geoTwig, this.twigMat);
+    // // this.twig = new THREE.Mesh(geoTwig, shaderMat_t);
+    // this.leaf = new THREE.Mesh(geoLeaf, this.leafMat);
+    // this.evil = new THREE.Mesh(geoEvil, this.evilMat);
+
+    // v.2
+    this.twig = new THREE.Mesh(geoTwig, twigMat);
     // this.twig = new THREE.Mesh(geoTwig, shaderMat_t);
-    this.leaf = new THREE.Mesh(geoLeaf, this.leafMat);
-    this.evil = new THREE.Mesh(geoEvil, this.evilMat);
+    this.leaf = new THREE.Mesh(geoLeaf, leafMat);
+    this.evil = new THREE.Mesh(geoEvil, evilMat);
+
     this.mesh.add(this.twig);
 	this.mesh.add(this.leaf);
 	this.mesh.add(this.evil);
@@ -36,8 +44,10 @@ function Thing( pos, geoTwig, geoLeaf, geoEvil ){
 	this.mesh.position.copy(this.position);
 
 	scene.add(this.mesh);
-	this.mesh.children[0].material.visible = false;
-	this.mesh.children[1].material.visible = false;
+	// this.mesh.children[0].material.visible = false;
+	// this.mesh.children[1].material.visible = false;
+	this.mesh.children[1].scale.set(0.01, 0.01, 0.01);
+	this.mesh.children[2].scale.set(0.01, 0.01, 0.01);
 }
 
 /*

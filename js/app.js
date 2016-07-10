@@ -49,6 +49,16 @@ var init = function () {
 		video.position.copy( videoPosition );
 		scene.add( video );
 
+	// LIGHT
+	var light = new THREE.DirectionalLight( 0xffffff, 1.5 );
+	light.position.set( 1, 1, 1 );
+	scene.add( light );
+
+	var light = new THREE.DirectionalLight( 0xffffff, 0.75 );
+	light.position.set( -1, - 0.5, -1 );
+	// scene.add( light );
+	// var light = new THREE.HemisphereLight(new THREE.Color(0xffffff), new THREE.Color(0xa5e3f9), 0.2);
+	scene.add( light );
 
 	renderer = new THREE.WebGLRenderer( { alpha: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight);
@@ -120,25 +130,73 @@ var init = function () {
 				UpdateVertices();
 			};
 			this.showTwig = function() {
+				// for(var i=0; i<domeMorphTargets.length; i++){
+				// 	domeMorphTargets[i].mesh.children[0].material.visible=true;
+				// 	domeMorphTargets[i].mesh.children[1].material.visible=false;
+				// 	domeMorphTargets[i].mesh.children[2].material.visible=false;
+				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
-					domeMorphTargets[i].mesh.children[0].material.visible=true;
-					domeMorphTargets[i].mesh.children[1].material.visible=false;
-					domeMorphTargets[i].mesh.children[2].material.visible=false;
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
+				// twigMat.visible = true;
+				// leafMat.visible = false;
+				// evilMat.visible = false;
 			};
 			this.showLeaf = function() {
+				// for(var i=0; i<domeMorphTargets.length; i++){
+				// 	domeMorphTargets[i].mesh.children[0].material.visible=false;
+				// 	domeMorphTargets[i].mesh.children[1].material.visible=true;
+				// 	domeMorphTargets[i].mesh.children[2].material.visible=false;
+				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
-					domeMorphTargets[i].mesh.children[0].material.visible=false;
-					domeMorphTargets[i].mesh.children[1].material.visible=true;
-					domeMorphTargets[i].mesh.children[2].material.visible=false;
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
+				// twigMat.visible = false;
+				// leafMat.visible = true;
+				// evilMat.visible = false;
 			};
 			this.showEvil = function() {
+				// for(var i=0; i<domeMorphTargets.length; i++){
+				// 	domeMorphTargets[i].mesh.children[0].material.visible=false;
+				// 	domeMorphTargets[i].mesh.children[1].material.visible=false;
+				// 	domeMorphTargets[i].mesh.children[2].material.visible=true;
+				// }
 				for(var i=0; i<domeMorphTargets.length; i++){
-					domeMorphTargets[i].mesh.children[0].material.visible=false;
-					domeMorphTargets[i].mesh.children[1].material.visible=false;
-					domeMorphTargets[i].mesh.children[2].material.visible=true;
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
+				// twigMat.visible = false;
+				// leafMat.visible = false;
+				// evilMat.visible = true;
+			};
+			this.toBrown = function() {
+				// 59.6, 35.3, 9
+				new TWEEN.Tween( twigMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
+				new TWEEN.Tween( leafMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
+				new TWEEN.Tween( evilMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
+			};
+			this.toPurple = function() {
+				// 35.3, 9, 59.6
+				new TWEEN.Tween( twigMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
+				new TWEEN.Tween( leafMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
+				new TWEEN.Tween( evilMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
+			};
+			this.toGreen = function() {
+				// 9, 59.6, 35.3
+				new TWEEN.Tween( twigMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
+				new TWEEN.Tween( leafMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
+				new TWEEN.Tween( evilMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
+			};
+			this.toPink = function() {
+				// 87.8, 19.2, 52.9
+				new TWEEN.Tween( twigMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
+				new TWEEN.Tween( leafMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
+				new TWEEN.Tween( evilMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
 			};
 		}
 		// gui.add(lightBehavior, 'chase');
@@ -151,6 +209,12 @@ var init = function () {
 		gui.add(lightBehavior, 'showTwig');
 		gui.add(lightBehavior, 'showLeaf');
 		gui.add(lightBehavior, 'showEvil');
+		//
+		gui.add(lightBehavior, 'toBrown');
+		gui.add(lightBehavior, 'toPurple');
+		gui.add(lightBehavior, 'toGreen');
+		gui.add(lightBehavior, 'toPink');
+		//
 		SetupAnim();
 
 		var lookupTable=[];
@@ -195,7 +259,7 @@ var init = function () {
 };
 
 var onWindowResize = function () {
-
+	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
