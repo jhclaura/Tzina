@@ -56,7 +56,7 @@ var init = function () {
 	light.position.set( -1, - 0.5, -1 );
 	scene.add( light );
 
-	renderer = new THREE.WebGLRenderer( { alpha: true } );
+	renderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
 	renderer.setSize( window.innerWidth, window.innerHeight);
 	renderer.domElement.style.width = window.innerWidth + 'px';
 	renderer.domElement.style.height = window.innerHeight + 'px';

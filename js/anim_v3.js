@@ -6,6 +6,15 @@
 	var dandelionMat; dandelionAmount = 7;
 	var videoCh = new THREE.Object3D();
 	var hannahHouse, hannahHouseMat;
+	var hannahRoom, hannahRoomMat;
+	var hannahRoomFiles = ["assets/models/hannah_room/hr_bookshelf.js", "assets/models/hannah_room/hr_chair.js",
+						   "assets/models/hannah_room/hr_door.js", "assets/models/hannah_room/hr_fireplace.js",
+						   "assets/models/hannah_room/hr_photo1.js", "assets/models/hannah_room/hr_photo2.js",
+						   "assets/models/hannah_room/hr_photo3.js", "assets/models/hannah_room/hr_photo4.js",
+						   "assets/models/hannah_room/hr_photo5.js", "assets/models/hannah_room/hr_room.js",
+						   "assets/models/hannah_room/hr_shelf.js", "assets/models/hannah_room/hr_sidewall.js",
+						   "assets/models/hannah_room/hr_sofa.js", "assets/models/hannah_room/hr_sofa2.js",
+						   "assets/models/hannah_room/hr_table.js", "assets/models/hannah_room/hr_window.js"];
 
 // LIGHT
 	var bulbGeo, bulbAmount=10, textGlow, lightSource=[];
@@ -27,9 +36,9 @@
 		}
 	}
 
-// MAN
-	var manTex1, manTex2, manTex3;
-	var manRig1, manBone1, manRig2, manBone2, manRig3, manBone3;
+// MEN
+	var doodleMenTexFiles = ["assets/images/doodleMen1.png", "assets/images/doodleMen2.png", "assets/images/doodleMen3.png"];
+	var doodleMenTex = [], doodleMen = [], doodleMenAnimators = [];
 
 // DOME
 	var dome, domeGeo, shield, shieldGeo, collapseGeo;
@@ -57,12 +66,12 @@ function SetupAnim() {
 	bulbChaseStrength = new LauraMath(0);
 	bulbAwayStrength = new LauraMath(0.5);
 	
-    textGlow = p_tex_loader.load('assets/images/glow_edit.png');
+    // textGlow = p_tex_loader.load('assets/images/glow_edit.png');
 
 	//
-	manTex1 = p_tex_loader.load('assets/images/man1.png');
-	manTex2 = p_tex_loader.load('assets/images/man2.png');
-	manTex3 = p_tex_loader.load('assets/images/man3.png');
+	// manTex1 = p_tex_loader.load('assets/images/man1.png');
+	// manTex2 = p_tex_loader.load('assets/images/man2.png');
+	// manTex3 = p_tex_loader.load('assets/images/man3.png');
 
 	// loadModelRig('assets/models/man1.js', manTex1, videoCh.position, 50, function(returnMesh){
 	// 	manRig1 = returnMesh;
@@ -114,6 +123,37 @@ function SetupAnim() {
 	loader.load("assets/models/twig.js", function(geometry, material){
 		twigGeo = geometry;
 	});
+
+	hannahRoom = new THREE.Object3D();
+
+	// DOODLE_MEN
+	var menGeometry = new THREE.PlaneGeometry( 3, 6 );
+	for(var i=0; i<doodleMenTexFiles.length; i++){
+		var mTex = p_tex_loader.load( doodleMenTexFiles[i] );
+	
+		var mAni = new TextureAnimator( mTex, 2, 1, 2, 60, [0,1] );
+		doodleMenAnimators.push(mAni);
+
+		var mMat = new THREE.MeshBasicMaterial( {map: mTex, side: THREE.DoubleSide, transparent: true} );
+		var mMesh = new THREE.Mesh( menGeometry, mMat );
+		mMesh.position.x = -15-i*5;
+		mMesh.position.y = 5.5;
+		hannahRoom.add(mMesh);
+		doodleMen.push(mMesh);
+	}
+
+	for(var i=0; i<hannahRoomFiles.length; i++){
+		loader.load( hannahRoomFiles[i], function(geometry){
+			mat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+			meshhh = new THREE.Mesh(geometry, mat);
+			hannahRoom.add(meshhh);
+		});
+	}
+	hannahRoom.scale.set(5,5,5);
+	hannahRoom.rotation.y = Math.PI;
+	hannahRoom.position.y = 400;
+	scene.add(hannahRoom);
+
 
 	function InitParticles_v2() {
 
@@ -312,5 +352,82 @@ function UpdateAnim() {
 			}
 		}
 	}
-	
+
+	// DOODLE_MEN
+	if(doodleMenAnimators.length>0){
+		for(var i=0; i<doodleMenAnimators.length; i++){
+			doodleMenAnimators[i].updateLaura( 300*dt );
+		}
+	}
+}
+
+
+// function built based on Stemkoski's
+// http://stemkoski.github.io/Three.js/Texture-Animation.html
+function TextureAnimator(texture, tilesHoriz, tilesVert, numTiles, tileDispDuration, order) 
+{	
+	// note: texture passed by reference, will be updated by the update function.
+		
+	this.tilesHorizontal = tilesHoriz;
+	this.tilesVertical = tilesVert;
+	// how many images does this spritesheet contain?
+	//  usually equals tilesHoriz * tilesVert, but not necessarily,
+	//  if there at blank tiles at the bottom of the spritesheet. 
+	this.numberOfTiles = numTiles;
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping; 
+	texture.repeat.set( 1 / this.tilesHorizontal, 1 / this.tilesVertical );
+
+	// how long should each image be displayed?
+	this.tileDisplayDuration = tileDispDuration;
+
+	// how long has the current image been displayed?
+	this.currentDisplayTime = 0;
+
+	// which image is currently being displayed?
+	this.currentTile = 0;
+
+	// order of the pic
+	this.displayOrder = order;
+
+		
+	this.updateLaura = function( milliSec )
+	{
+		this.currentDisplayTime += milliSec;
+		while (this.currentDisplayTime > this.tileDisplayDuration)
+		{
+			var currentColumn = this.displayOrder[ this.currentTile ] % this.tilesHorizontal;
+			texture.offset.x = currentColumn / this.tilesHorizontal;
+			var currentRow = Math.floor( this.displayOrder[ this.currentTile ] / this.tilesHorizontal );
+			texture.offset.y = currentRow / this.tilesVertical;
+
+			this.currentDisplayTime -= this.tileDisplayDuration;
+			this.currentTile++;
+
+			if (this.currentTile == this.numberOfTiles)
+				this.currentTile = 0;
+
+			// console.log(this.displayOrder[ this.currentTile ]);
+		}
+	};
+
+	this.update = function( milliSec )
+	{
+		this.currentDisplayTime += milliSec;
+		while (this.currentDisplayTime > this.tileDisplayDuration)
+		{
+			this.currentDisplayTime -= this.tileDisplayDuration;
+			this.currentTile++;
+
+			if (this.currentTile == this.numberOfTiles)
+				this.currentTile = 0;
+
+
+			var currentColumn = this.currentTile % this.tilesHorizontal;
+			texture.offset.x = currentColumn / this.tilesHorizontal;
+			var currentRow = Math.floor( this.currentTile / this.tilesHorizontal );
+			texture.offset.y = currentRow / this.tilesVertical;
+
+			console.log('currentTile: ' + this.currentTile + ', offset.x: ' + texture.offset.x);
+		}
+	};
 }
