@@ -28,6 +28,7 @@ var clickCount;
 var gui;
 //
 var videoPosition = new THREE.Vector3(0,400,-2000);
+var lightBehavior;
 
 var init = function () {
 
@@ -82,7 +83,7 @@ var init = function () {
 
 	// -------------------------- ANIM START -------------------------------
 		clickCount = 0;
-		var lightBehavior = new function() {
+		lightBehavior = new function() {
 			this.domeInfluence = 0.01;
 			this.domeInfluence2 = 0.01;
 			this.chase = function() {
@@ -134,9 +135,9 @@ var init = function () {
 			};
 			this.showLeaf = function() {
 				for(var i=0; i<domeMorphTargets.length; i++){
-					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
-					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
-					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 1500 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();
+					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();
 				}
 			};
 			this.showEvil = function() {
@@ -195,7 +196,7 @@ var init = function () {
 
 			// get morph geometry update position data
 			for(var i=0; i<shieldGeo.vertices.length; i++){
-				var centerV = new THREE.Vector3();
+				var centerV = new THREE.Vector3(0,-2000*lightBehavior.domeInfluence2,0);
 				var vA = new THREE.Vector3();
 				var tempA = new THREE.Vector3();
 

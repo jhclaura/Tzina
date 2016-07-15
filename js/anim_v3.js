@@ -11,7 +11,7 @@
 						   "assets/models/hannah_room/hr_door.js", "assets/models/hannah_room/hr_fireplace.js",
 						   "assets/models/hannah_room/hr_photo1.js", "assets/models/hannah_room/hr_photo2.js",
 						   "assets/models/hannah_room/hr_photo3.js", "assets/models/hannah_room/hr_photo4.js",
-						   "assets/models/hannah_room/hr_photo5.js", "assets/models/hannah_room/hr_room.js",
+						   "assets/models/hannah_room/hr_photo5.js", "assets/models/hannah_room/hr_room2.js",
 						   "assets/models/hannah_room/hr_shelf.js", "assets/models/hannah_room/hr_sidewall.js",
 						   "assets/models/hannah_room/hr_sofa.js", "assets/models/hannah_room/hr_sofa2.js",
 						   "assets/models/hannah_room/hr_table.js", "assets/models/hannah_room/hr_window.js"];
@@ -43,7 +43,7 @@
 // DOME
 	var dome, domeGeo, shield, shieldGeo, collapseGeo;
 	var domeMorphTargets = [];
-	var twigGeo, leafGeo, evilGeo, twigMat, leafMat, evilMat;
+	var twigGeo, leafGeo, evilGeo, twigMat, leafMat, evilMat, evilTex;
 	var displacement_t, color_t, uniforms_t, shaderMat_t, nv_t;
 	var perlin = new ImprovedNoise(), noiseQuality = 1;
 	var hannahDomeBuilt = false;
@@ -57,6 +57,8 @@ function SetupAnim() {
 	p_tex_loader.load('assets/images/dandelion_particle.jpg', function(tex){
 	 	particleTex = tex;
 	});
+
+	evilTex = p_tex_loader.load('assets/images/spike2.jpg');
 
 	hannahHouseMat = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 
@@ -114,11 +116,32 @@ function SetupAnim() {
 	loadModelDome('assets/models/shield.js', 'assets/models/dome.js', 'assets/models/collapse.js');
 
 	var loader = new THREE.JSONLoader();
-	loader.load("assets/models/evil.js", function(geometry, material){
+	loader.load("assets/models/spike_curvey.js", function(geometry, material){
 		evilGeo = geometry;
 	});
-	loader.load("assets/models/leaf.js", function(geometry, material){
+	loader.load("assets/models/leavesss_less.js", function(geometry, material){
 		leafGeo = geometry;
+
+		// ref: https://stemkoski.github.io/Three.js/Vertex-Colors.html
+		var face, numberOfSides, vertexIndex, point, color;
+		var faceIndices = [ 'a', 'b', 'c', 'd' ];
+		// vertex color
+		for(var i=0; i<leafGeo.faces.length; i++)
+		{
+			face = leafGeo.faces[i];
+			numberOfSides = (face instanceof THREE.Face3 ) ? 3 : 4;
+			// assign color to each vertex of current face
+			for(var j=0; j<numberOfSides; j++)
+			{
+				vertexIndex = face[ faceIndices[j] ];
+				//store coordinates of vertex
+				point = leafGeo.vertices[ vertexIndex ];
+				// initialize color variable
+				color = new THREE.Color();
+				color.setRGB( 0.1 + (10+point.x) / ((j+4)*5), 0.5 + (10+point.y) / ((j+4)*15), 0.2 + (10+point.z) / ((j+4)*5) );
+				face.vertexColors[j] = color;
+			}
+		}
 	});
 	loader.load("assets/models/twig.js", function(geometry, material){
 		twigGeo = geometry;
@@ -127,7 +150,7 @@ function SetupAnim() {
 	hannahRoom = new THREE.Object3D();
 
 	// DOODLE_MEN
-	var menGeometry = new THREE.PlaneGeometry( 3, 6 );
+	var menGeometry = new THREE.PlaneGeometry( 5, 10 );
 	for(var i=0; i<doodleMenTexFiles.length; i++){
 		var mTex = p_tex_loader.load( doodleMenTexFiles[i] );
 	
@@ -136,8 +159,8 @@ function SetupAnim() {
 
 		var mMat = new THREE.MeshBasicMaterial( {map: mTex, side: THREE.DoubleSide, transparent: true} );
 		var mMesh = new THREE.Mesh( menGeometry, mMat );
-		mMesh.position.x = -15-i*5;
-		mMesh.position.y = 5.5;
+		mMesh.position.x = -15-i*6;
+		mMesh.position.y = 7.5;
 		hannahRoom.add(mMesh);
 		doodleMen.push(mMesh);
 	}
@@ -270,9 +293,15 @@ function SetupAnim() {
 		var followMat = new THREE.MeshBasicMaterial({color: 0xffff00});
 		var followMesh = new THREE.Mesh(new THREE.SphereGeometry(10), followMat);
 
-		leafMat = new THREE.MeshBasicMaterial( {color: 0x17985a, wireframe: true} );
+		// leafMat = new THREE.MeshBasicMaterial( {color: 0x17985a, wireframe: true} );
+		leafMat = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors, wireframe: true } );
+
 		twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
-		evilMat = new THREE.MeshLambertMaterial( {color: 0x5a1798} );
+		// evilMat = new THREE.MeshLambertMaterial( {color: 0x5a1798} );
+		evilTex.wrapS = THREE.RepeatWrapping;
+		evilTex.wrapT = THREE.RepeatWrapping;
+		evilTex.repeat.set( 2, 6 );
+		evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
 		loader.load(modelS, function(geometry, material){
 
@@ -343,7 +372,7 @@ function UpdateAnim() {
 	if(hannahDomeBuilt){
 		for(var i=0; i<shieldGeo.vertices.length; i++){
 			// var h =  perlin.noise(et*0.001, i, 1) % (Math.PI/2);
-			var h = perlin.noise(et*0.1, i, 1);
+			var h = perlin.noise(et*0.1, i, 1)/2;
 			domeMorphTargets[i].mesh.position.addScalar( h );
 
 			if( i%6==0 ){
