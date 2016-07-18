@@ -167,12 +167,15 @@ function SetupAnim() {
 
 	for(var i=0; i<hannahRoomFiles.length; i++){
 		loader.load( hannahRoomFiles[i], function(geometry){
-			mat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+			var colorValue = Math.random() * 0xFF | 0;
+			var colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
+			// mat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
+			mat = new THREE.MeshLambertMaterial({ color: colorString });
 			meshhh = new THREE.Mesh(geometry, mat);
 			hannahRoom.add(meshhh);
 		});
 	}
-	hannahRoom.scale.set(5,5,5);
+	hannahRoom.scale.set(8,8,8);
 	hannahRoom.rotation.y = Math.PI;
 	hannahRoom.position.y = 400;
 	scene.add(hannahRoom);
@@ -297,10 +300,11 @@ function SetupAnim() {
 		leafMat = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors, wireframe: true } );
 
 		twigMat = new THREE.MeshBasicMaterial( {color: 0x985a17, wireframe: true} );
+
 		// evilMat = new THREE.MeshLambertMaterial( {color: 0x5a1798} );
 		evilTex.wrapS = THREE.RepeatWrapping;
 		evilTex.wrapT = THREE.RepeatWrapping;
-		evilTex.repeat.set( 2, 6 );
+		evilTex.repeat.set( 1, 2 );
 		evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
 		loader.load(modelS, function(geometry, material){
