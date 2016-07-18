@@ -131,9 +131,6 @@ var init = function () {
 					TweenMax.to( domeMorphTargets[i].mesh.children[0].scale, 2, { x: 1, y: 1, z: 1 } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[1].scale, 2, { x: 0.01, y: 0.01, z: 0.01 } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[2].scale, 2, { x: 0.01, y: 0.01, z: 0.01 } );
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
 			};
 			this.showLeaf = function() {
@@ -141,9 +138,6 @@ var init = function () {
 					TweenMax.to( domeMorphTargets[i].mesh.children[1].scale, 2, { x: 1, y: 1, z: 1, ease: Power2.easeOut } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[0].scale, 2.5, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[2].scale, 2.5, { x: 0.01, y: 0.01, z: 0.01, ease: Power4.easeIn } );
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 1500 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();
 				}
 			};
 			this.showEvil = function() {
@@ -151,9 +145,6 @@ var init = function () {
 					TweenMax.to( domeMorphTargets[i].mesh.children[2].scale, 1.5, { x: 1, y: 1, z: 1 } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[1].scale, 1.5, { x: 0.01, y: 0.01, z: 0.01 } );
 					TweenMax.to( domeMorphTargets[i].mesh.children[0].scale, 1.5, { x: 0.01, y: 0.01, z: 0.01 } );
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 1, y: 1, z: 1 }, 2000 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
-					// new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 2000 ).start();
 				}
 			};
 			this.toBrown = function() {
@@ -161,36 +152,24 @@ var init = function () {
 				TweenMax.to( twigMat.color, 2, { r: 0.59, g: 0.35, b: 0.1 } );
 				TweenMax.to( leafMat.color, 2, { r: 0.59, g: 0.35, b: 0.1 } );
 				TweenMax.to( evilMat.color, 2, { r: 0.59, g: 0.35, b: 0.1 } );
-				// new TWEEN.Tween( twigMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
-				// new TWEEN.Tween( leafMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
-				// new TWEEN.Tween( evilMat.color ).to( { r: 0.59, g: 0.35, b: 0.1 }, 2000 ).start();
 			};
 			this.toPurple = function() {
 				// 35.3, 9, 59.6
-				TweenMax( twigMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
-				TweenMax( leafMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
-				TweenMax( evilMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
-				// new TWEEN.Tween( twigMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
-				// new TWEEN.Tween( leafMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
-				// new TWEEN.Tween( evilMat.color ).to( { r: 0.35, g: 0.1, b: 0.59 }, 2000 ).start();
+				TweenMax.to( twigMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
+				TweenMax.to( leafMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
+				TweenMax.to( evilMat.color, 2, { r: 0.35, g: 0.1, b: 0.59 } );
 			};
 			this.toGreen = function() {
 				// 9, 59.6, 35.3
-				TweenMax( twigMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
-				TweenMax( leafMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
-				TweenMax( evilMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
-				// new TWEEN.Tween( twigMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
-				// new TWEEN.Tween( leafMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
-				// new TWEEN.Tween( evilMat.color ).to( { r: 0.1, g: 0.59, b: 0.35 }, 2000 ).start();
+				TweenMax.to( twigMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
+				TweenMax.to( leafMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
+				TweenMax.to( evilMat.color, 2, { r: 0.1, g: 0.59, b: 0.35 } );
 			};
 			this.toPink = function() {
 				// 87.8, 19.2, 52.9
-				TweenMax( twigMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
-				TweenMax( leafMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
-				TweenMax( evilMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
-				// new TWEEN.Tween( twigMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
-				// new TWEEN.Tween( leafMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
-				// new TWEEN.Tween( evilMat.color ).to( { r: 0.88, g: 0.19, b: 0.53 }, 2000 ).start();
+				TweenMax.to( twigMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
+				TweenMax.to( leafMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
+				TweenMax.to( evilMat.color, 2, { r: 0.88, g: 0.19, b: 0.53 } );
 			};
 		}
 		gui.add(lightBehavior, 'domeInfluence', 0, 1).onChange(lightBehavior.domeUpdate);
