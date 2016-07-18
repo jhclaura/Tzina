@@ -370,7 +370,7 @@ function UpdateAnim() {
 	if(particleGroup)
 		particleGroup.tick( dt );
 
-	TWEEN.update();
+	// TWEEN.update();
 
 
 	//
