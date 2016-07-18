@@ -135,6 +135,7 @@ var init = function () {
 			};
 			this.showLeaf = function() {
 				for(var i=0; i<domeMorphTargets.length; i++){
+					// TweenMax.to( domeMorphTargets[i].mesh.children[1], 1.5, {scale: });
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[1].scale ).to( { x: 1, y: 1, z: 1 }, 1500 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[0].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();
 					new TWEEN.Tween( domeMorphTargets[i].mesh.children[2].scale ).to( { x: 0.01, y: 0.01, z: 0.01 }, 7000 ).start();

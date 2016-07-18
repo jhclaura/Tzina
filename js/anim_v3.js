@@ -58,7 +58,7 @@ function SetupAnim() {
 	 	particleTex = tex;
 	});
 
-	evilTex = p_tex_loader.load('assets/images/spike2.jpg');
+	evilTex = p_tex_loader.load('assets/images/spike3.jpg');
 
 	hannahHouseMat = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
 
@@ -304,7 +304,7 @@ function SetupAnim() {
 		// evilMat = new THREE.MeshLambertMaterial( {color: 0x5a1798} );
 		evilTex.wrapS = THREE.RepeatWrapping;
 		evilTex.wrapT = THREE.RepeatWrapping;
-		evilTex.repeat.set( 1, 2 );
+		evilTex.repeat.set( 1, 4 );
 		evilMat = new THREE.MeshLambertMaterial( {map: evilTex} );
 
 		loader.load(modelS, function(geometry, material){
@@ -371,6 +371,7 @@ function UpdateAnim() {
 		particleGroup.tick( dt );
 
 	TWEEN.update();
+
 
 	//
 	if(hannahDomeBuilt){
