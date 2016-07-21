@@ -1,42 +1,7 @@
-// Animation v4 - Clean up
+// Animation_Miriam
 
 // GENERAL
 	var clock;
-// PARTICLES
-	var emitter, particleGroup;
-	var counter, particleTex;
-	var dandelionMat; dandelionAmount = 7;
-	var videoCh = new THREE.Object3D();
-	var hannahHouse, hannahHouseMat;
-	var hannahRoom, hannahRoomMat;
-	var hannahRoomFiles = ["assets/models/hannah_room/hr_bookshelf.js", "assets/models/hannah_room/hr_chair.js",
-						   "assets/models/hannah_room/hr_door.js", "assets/models/hannah_room/hr_fireplace.js",
-						   "assets/models/hannah_room/hr_photo1.js", "assets/models/hannah_room/hr_photo2.js",
-						   "assets/models/hannah_room/hr_photo3.js", "assets/models/hannah_room/hr_photo4.js",
-						   "assets/models/hannah_room/hr_photo5.js", "assets/models/hannah_room/hr_room2.js",
-						   "assets/models/hannah_room/hr_shelf.js", "assets/models/hannah_room/hr_sidewall.js",
-						   "assets/models/hannah_room/hr_sofa.js", "assets/models/hannah_room/hr_sofa2.js",
-						   "assets/models/hannah_room/hr_table.js", "assets/models/hannah_room/hr_window.js"];
-
-// LIGHT
-	var bulbGeo, bulbAmount=10, textGlow, lightSource=[];
-	var bulbChaseStrength, bulbAwayStrength;
-	var bulbChaseStrengthes=[], bulbAwayStrengthes=[];
-	var lightToChase = true;
-
-	LauraMath = function(x) {
-		this.x = x || 0;
-	}
-
-	LauraMath.prototype = {
-
-		constructor: LauraMath,
-
-		lerpValue: function (end, amount) {
-			this.x += ((end - this.x) * amount);
-			return this.x;
-		}
-	}
 
 //CLOCK
 	var swingClockGeo, swingClockTex, swingClockMat, swingClock;
@@ -45,11 +10,11 @@
 	var cGear;
 	var myGear = new THREE.Object3D(), myCP1 = new THREE.Object3D(), myCP2 = new THREE.Object3D();
 	var grandFatherClock = new THREE.Object3D();
+	var pointer1Time = Date.now();
+	var pointer2Time = Date.now();
 
 	var startSwing = true;
 	var swingStep = 5;
-
-	var BGColor = new THREE.Color(0,0,0);
 
 // MAN_FIGURE
 	var men_figures_vec = {}, men_figures_points=[];
@@ -68,21 +33,18 @@ function SetupAnim() {
 	// 	evilGeo = geometry;
 	// });
 
-	hannahRoom = new THREE.Object3D();
-	// for(var i=0; i<hannahRoomFiles.length; i++){
-	// 	loader.load( hannahRoomFiles[i], function(geometry){
-	// 		var colorValue = Math.random() * 0xFF | 0;
-	// 		var colorString = "rgb("+colorValue+","+colorValue+","+colorValue+")";
-	// 		// mat = new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff });
-	// 		mat = new THREE.MeshLambertMaterial({ color: colorString });
-	// 		meshhh = new THREE.Mesh(geometry, mat);
-	// 		hannahRoom.add(meshhh);
-	// 	});
-	// }
-	// hannahRoom.scale.set(8,8,8);
-	// hannahRoom.rotation.y = Math.PI;
-	// hannahRoom.position.y = 400;
-	// scene.add(hannahRoom);
+	//grandfather clock
+		GFClockTex = p_tex_loader.load('assets/images/clockUV3.jpg');
+		GFClockMat = new THREE.MeshLambertMaterial( {map: GFClockTex} );
+		loadModelClock("assets/models/clock_surface.js", "assets/models/clock_gear.js", "assets/models/clock_pointerA.js", "assets/models/clock_pointerB.js", GFClockMat);
+
+	//CLOCK
+		swingClockGeo = new THREE.BoxGeometry(2,20,2);
+		transY(swingClockGeo, -10);
+		swingClockMat = new THREE.MeshBasicMaterial({color: 0x00ffff});
+		swingClock = new THREE.Mesh(swingClockGeo, swingClockMat);
+		swingClock.position.y = 10;
+		// scene.add(swingClock);
 
 	// ORGANIZE THE DATA
 		var m_f_size = Object.keys(men_figures).length;
@@ -298,14 +260,159 @@ function SetupAnim() {
 		});
 	}
 
+	// Could be in util.js
+	function transX(geo, n){
+		for(var i=0; i<geo.vertices.length; i++){
+			geo.vertices[i].x += n;
+		}
+	}
+
+	function transZ(geo, n){
+		for(var i=0; i<geo.vertices.length; i++){
+			geo.vertices[i].z += n;
+		}
+	}
+
+	function transY(geo, n){
+		for(var i=0; i<geo.vertices.length; i++){
+			geo.vertices[i].y += n;
+		}
+	}
+
+	function loadModelClock (model, modelB, modelC, modelD, meshMat) {
+
+		var loader = new THREE.JSONLoader();
+		var cloMat = meshMat;
+
+		loader.load(model, function(geometry, material){
+
+			geometry.center();
+			var cFaceGeo = geometry.clone();
+
+			// transZ(slipperGeo, 8);
+
+			
+
+			cFace = new THREE.Mesh(cFaceGeo, cloMat);
+			myClock.add(cFace);
+
+			// transZ(slipperGeo, -16);
+			// var leftS = new THREE.Mesh(slipperGeo.clone(), slpMat);
+			// mySlippers.add(leftS);
+
+			cFace.scale.set(1, 1, 1.7);
+			cFace.position.set(0, 0, 3.1);
+			// mySlippers.rotation.y = Math.PI/2;
+			// scene.add(mySlippers);
+
+		});
+
+		loader.load(modelB, function(geometryB, material){
+
+			geometryB.center();
+			var cGearGeo = geometryB.clone();
+
+			transY(cGearGeo, 27);
+			// transZ(cGearGeo, 8);
+
+			cGear = new THREE.Mesh(cGearGeo, cloMat);
+			
+			// cGear.position.y = -20;
+			myGear = new THREE.Object3D();
+			myGear.add(cGear);
+			myGear.rotation.z = -Math.PI/5;
+
+			myClock.add(myGear);
+
+		});
+
+		loader.load(modelC, function(geometryC, material){
+
+			geometryC.center();
+			var cP1Geo = geometryC.clone();
+
+			// transZ(slipperGeo, 8);
+
+			cP1 = new THREE.Mesh(cP1Geo, cloMat);
+			cP1.position.set(-2.2, 0, 6);
+			cP1.scale.set(1, 1, 2.5);
+			myCP1.add(cP1);
+
+			myClock.add(myCP1);
+
+		});
+
+		loader.load(modelD, function(geometryD, material){
+
+			geometryD.center();
+			var cP2Geo = geometryD.clone();
+
+			// transZ(slipperGeo, 8);
+
+			cP2 = new THREE.Mesh(cP2Geo, cloMat);
+			cP2.position.set(0,12,3);
+			cP2.scale.set(1, 1, 2.5);
+			myCP2.add(cP2);
+			myClock.add(myCP2);
+
+
+			myClock.position.y = -80;
+
+			grandFatherClock.add(myClock);
+
+			// BAR
+			// var geoTemp = new THREE.BoxGeometry(5,50,5);
+			// var matTemp = new THREE.MeshLambertMaterial({color: 0xa280db});
+			// var cube = new THREE.Mesh(geoTemp, matTemp);
+			// cube.position.y = -35;
+			// grandFatherClock.add(cube);
+
+			for(i=0; i<6; i++){
+				var geoTemp = new THREE.CylinderGeometry(0.5 ,0.5 ,90);
+				// var matTemp = new THREE.MeshLambertMaterial({color: 0xdf349c});
+				var bar = new THREE.Mesh(geoTemp, cloMat);
+				bar.position.y = -15;
+				bar.position.x = i*3 - 8;
+				grandFatherClock.add(bar);
+			}
+
+
+
+			grandFatherClock.position.set(50, 700, 0);
+			grandFatherClock.scale.multiplyScalar(2);
+			grandFatherClock.rotation.y = Math.PI;
+
+			scene.add(grandFatherClock);
+
+		});
+	}
 }
 
 function UpdateAnim() {
 	var dt = clock.getDelta ();
 	var et = clock.getElapsedTime ();
 
-	// if(particleGroup)
-	// 	particleGroup.tick( dt );
+	var timeee = Date.now();
+
+	if(swingStep<400)
+		swingStep += 0.5;
+
+	grandFatherClock.rotation.z = Math.sin(timeee / 1000) * (Math.PI/10);
+	
+	if(cGear)
+		cGear.rotation.y += 0.008;
+	// myCP1.rotation.z += 0.01;
+	if(pointer1Time + 1200 < timeee ){
+		myCP1.rotation.z += 0.1;
+		// if(samplesAllLoaded) sample.trigger(11, 0.5);
+		pointer1Time = Date.now();
+	}
+
+	if(pointer2Time + 2000 < timeee ){
+		myCP2.rotation.z -= 0.1;
+		// if(samplesAllLoaded) sample.trigger(11, 1.5);
+		pointer2Time = Date.now();
+	}
 }
 
 
