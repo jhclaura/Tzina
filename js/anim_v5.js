@@ -53,8 +53,8 @@
 
 	var sequenceConfig = [
 		{time: 4000, anim: BeDome, seqStartTime: -1, performed: false},
-		{time: 8000, anim: ShowLeaf, seqStartTime: -1, performed: false},
-		{time: 12000, anim: BeCollapse, seqStartTime: -1, performed: false}
+		{time: 10000, anim: ShowLeaf, seqStartTime: -1, performed: false},
+		{time: 16000, anim: BeCollapse, seqStartTime: -1, performed: false}
 	];
 
 	var lookupTable=[];
